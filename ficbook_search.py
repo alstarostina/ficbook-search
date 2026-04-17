@@ -15,7 +15,8 @@ from playwright.sync_api import sync_playwright
 
 
 def match(text, term):
-    return bool(re.search(r'\b' + re.escape(term) + r'\b', text, re.IGNORECASE))
+    pattern = re.escape(term) if FUZZY else r'\b' + re.escape(term) + r'\b'
+    return bool(re.search(pattern, text, re.IGNORECASE))
 
 TAG_URL = "https://ficbook.net/user_blog/tag/%23%D0%BF%D0%BE%D1%87%D0%B8%D1%82%D0%B0%D1%82%D0%B5%D0%BB%D0%B8"
 DELAY = 1.5  # seconds between requests
@@ -30,12 +31,17 @@ elif "--any" in args:
 else:
     MODE = "exact"
 
+FUZZY = "--fuzzy" in args
+if FUZZY:
+    args.remove("--fuzzy")
+
 SEARCH_TERM = " ".join(args)
 if not SEARCH_TERM:
-    print("Usage: python3 ficbook_search.py [--all|--any] <search term>")
+    print("Usage: python3 ficbook_search.py [--all|--any] [--fuzzy] <search term>")
     print("  (default) exact phrase match")
     print("  --all     all words must appear somewhere in the post")
     print("  --any     any word matches")
+    print("  --fuzzy   partial/suffix forms also match (e.g. волк matches волку)")
     sys.exit(1)
 
 WORDS = SEARCH_TERM.lower().split()
@@ -114,7 +120,8 @@ def search_post(page, url):
 
 
 MODE_LABEL = {"exact": "exact phrase", "all": "all words", "any": "any word"}
-print(f"\nSearching for: «{SEARCH_TERM}» ({MODE_LABEL[MODE]})\n")
+fuzzy_suffix = ", fuzzy" if FUZZY else ""
+print(f"\nSearching for: «{SEARCH_TERM}» ({MODE_LABEL[MODE]}{fuzzy_suffix})\n")
 
 with sync_playwright() as p:
     browser = p.chromium.connect_over_cdp("http://localhost:9222")

@@ -36,13 +36,16 @@ normally, the script is ready to run.
 ## Usage
 
 ```bash
-python3 ficbook_search.py <search term>           # exact phrase (default)
-python3 ficbook_search.py --all "word1 word2"     # all words must appear in the post
-python3 ficbook_search.py --any "word1 word2"     # any word matches
+python3 ficbook_search.py <search term>                  # exact phrase (default)
+python3 ficbook_search.py --all "word1 word2"            # all words must appear in the post
+python3 ficbook_search.py --any "word1 word2"            # any word matches
+python3 ficbook_search.py --fuzzy волк                   # also matches волку, волком, …
+python3 ficbook_search.py --any --fuzzy "волк лис"       # combine with --all / --any
 ```
 
-Search is case-insensitive and matches whole words only — searching for `лин` will
-not match `роулинг`.
+Search is case-insensitive. By default it matches whole words only — searching for
+`лин` will not match `роулинг`. Add `--fuzzy` to disable this and allow partial/suffix
+matches (useful for declined or conjugated Russian words).
 
 ---
 
