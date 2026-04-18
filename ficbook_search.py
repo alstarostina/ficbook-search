@@ -19,7 +19,7 @@ def match(text, term):
     return bool(re.search(pattern, text, re.IGNORECASE))
 
 TAG_URL = "https://ficbook.net/user_blog/tag/%23%D0%BF%D0%BE%D1%87%D0%B8%D1%82%D0%B0%D1%82%D0%B5%D0%BB%D0%B8"
-DELAY = 1.5  # seconds between requests
+DELAY = 0.5  # seconds between requests
 
 args = sys.argv[1:]
 if "--all" in args:
@@ -66,7 +66,7 @@ def collect_post_urls(page):
         print(f"  Page {listing_page}...", end=" ", flush=True)
         page.goto(url, wait_until="load")
         wait_for_page(page)
-        page.wait_for_timeout(1000)
+        page.wait_for_timeout(300)
 
         links = page.eval_on_selector_all("a[href]", "els => els.map(e => e.href)")
         post_links = list(dict.fromkeys(
@@ -93,7 +93,7 @@ def collect_post_urls(page):
 def search_post(page, url):
     page.goto(url, wait_until="load")
     wait_for_page(page)
-    page.wait_for_timeout(800)
+    page.wait_for_timeout(300)
 
     body = page.query_selector(".blog-post-content, .post-content, article, .entry-content, main")
     text = body.inner_text() if body else page.inner_text("body")
