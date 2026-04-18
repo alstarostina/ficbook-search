@@ -5,9 +5,9 @@ Search across ficbook.net blog posts tagged with `#почитатели`.
 Since ficbook does not provide native search across tagged blog posts, this script
 automates a real Chrome browser to visit each post and search for your term.
 
-> **Note:** The search is performed on the entire page content, not just the blog
-> post body. This means it may occasionally match text in navigation menus, sidebars,
-> comments, or other page elements — not only the post text itself.
+> **Note:** The search is performed on the post body and comments, not just the
+> post text itself. The page-level **Промо** widget at the bottom is automatically
+> excluded so it does not cause false positives.
 
 ---
 

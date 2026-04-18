@@ -98,6 +98,14 @@ def search_post(page, url):
     body = page.query_selector(".blog-post-content, .post-content, article, .entry-content, main")
     text = body.inner_text() if body else page.inner_text("body")
 
+    # Drop the page-level "Промо" widget that appears after comments — it's a
+    # bare heading line, not the word appearing inside normal post/comment text.
+    lines = text.splitlines()
+    for i, line in enumerate(lines):
+        if line.strip().lower() == "промо":
+            text = "\n".join(lines[:i])
+            break
+
     # For --all: check the whole post first, then collect matching lines as context
     if MODE == "all":
         if not all(match(text, w) for w in WORDS):
